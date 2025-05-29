@@ -1,3 +1,4 @@
+
 module rough(
 input clk,rst,
 input strans,
@@ -10,36 +11,23 @@ output reg cs,
 ////////////////////////////////////////////////////////////////MEMORY INPUT /////////////////////////////////////////////////////// 
 
 input enable,
-input write,
-input read,
+input read_write_,   //////read or erite bar/////////// 1 read //////0 write//////////
 input [7:0] data,
+input [2:0] madd,
 output reg [7:0] out
-
     );
 
  
  ////////////////////////////////////////////////////////////////MEMORY /////////////////////////////////////////////////////// 
 reg [7:0] memory[7:0];     
-reg [3:0]radd;
-reg [3:0]wadd;
 
-always @(posedge clk or posedge rst)begin
-           if(rst) begin
-                out= 8'h00;
-                radd = 3'b000;
-                wadd = 3'b000;
-           end
-           else if(enable ==1  && strans ==0) begin          //////// FIFO WORK ONLY ENABLE IS HIGH  AND STRANS IS LOW //////////////////////////////
-                if(write ==1) begin
-                     memory[wadd] = data;
-                     wadd = wadd+1;
-                end
-                if(read ==1) begin
-                     out = memory[radd];
-                     radd = radd+1;
-                end    
-           end     
-end 
+always @(posedge clk or posedge rst)begin  
+     if(rst) out= 8'h00;
+     else if(enable ==1  && strans ==0) begin    //////// FIFO WORK ONLY ENABLE IS HIGH  AND STRANS IS LOW //////////////////////////////
+        if(read_write_ ==0) memory[madd] = data;
+        if(read_write_ ==1) out =  memory[madd];     
+     end     
+end
  
   ////////////////////////////////////////////////////////////////MEMORY ///////////////////////////////////////////////////////
  
