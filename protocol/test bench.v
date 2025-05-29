@@ -1,3 +1,5 @@
+
+
 module rough_tb( );
 
 reg clk,rst,strans;
@@ -5,36 +7,35 @@ reg miso;
 wire mosi,mclk,cs;
 
 reg enable;
-reg write;
-reg read;
+reg read_write_;
 reg [7:0] data;
+reg [2:0] madd;
 wire [7:0] out;
 
-rough uut(.clk(clk), .rst(rst), .strans(strans), .miso(miso), .mosi(mosi), .mclk(mclk), .cs(cs), .enable(enable), .write(write), .read(read), .data(data), .out(out) );
+rough uut(.clk(clk), .rst(rst), .strans(strans), .miso(miso), .mosi(mosi), .mclk(mclk), .cs(cs), .enable(enable), .read_write_(read_write_), .data(data), .madd(madd), .out(out) );
 
 always #5 clk = ~clk;
 
-
-
-
 initial begin
-clk = 1; rst =1; write=0;read=0; strans = 0; enable=1;#10
-rst=0; data = 8'h02; write =1; #2 write=0; #8;
-       data = 8'h04; write =1; #2 write=0; #8;
-       data = 8'h08; write =1; #2 write=0; #8;
-       data = 8'h16; write =1; #2 write=0; #8;
-       data = 8'h32; write =1; #2 write=0; #8;
-       data = 8'h64; write =1; #2 write=0; #8;
-       data = 8'h6f; write =1; #2 write=0; #8;
-       data = 8'hff; write =1; #2 write=0; #8;
-        read = 1; #80;
- strans = 1;enable=0;
+clk = 1; rst =1; read_write_=0; strans = 0; enable=1;#10
+rst=0;   madd= 3'h0; data = 8'h12; #10
+         madd= 3'h1; data = 8'h34; #10
+         madd= 3'h2; data = 8'h56; #10
+         madd= 3'h3; data = 8'h78; #10
+         madd= 3'h4; data = 8'h9a; #10
+         madd= 3'h5; data = 8'hbc; #10
+         madd= 3'h6; data = 8'hde; #10
+         madd= 3'h7; data = 8'hf0; #10
+read_write_ = 1;     madd= 3'h0;  #10
+                     madd= 3'h1;  #10
+                     madd= 3'h2;  #10
+                     madd= 3'h3;  #10
+                     madd= 3'h4;  #10
+                     madd= 3'h5;  #10
+                     madd= 3'h6; #10
+                     madd= 3'h7; #10
+ strans = 1;enable=0; #660 $finish;
 
 end
-
-
-
-///////////////////////////////////////////////MEMORY /////////////////////////////////////////////////////////////////////
-      
 
 endmodule
